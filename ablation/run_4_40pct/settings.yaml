@@ -1,0 +1,156 @@
+# =============================================================================
+# GEM-GNN Settings File
+# Edit the values below to configure the entire pipeline.
+# This file is read by config_loader.py at the top of every script.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Paths
+# -----------------------------------------------------------------------------
+paths:
+  gem_dir:           "/home/eesi/glen/GEM_GNN/SIMBA-GNN/sbml"
+  strains_csv:       "/home/eesi/glen/GEM_GNN/SIMBA-GNN/data/anaerobic_strains.csv"
+  pairs_csv:         "/home/eesi/glen/GEM_GNN/SIMBA-GNN/data/pairwise_results.csv"
+  monoculture_json:  "monoculture_growth.json"
+
+  # Pairwise system outputs
+  triplets_json:           "triplets.json"
+  val_pairs_json:          "val_pairs.json"
+  training_history_json:   "training_history.json"
+  checkpoint_dir:          "checkpoints"
+
+  # Individual strain system outputs
+  triplets_individual_train:   "triplets_individual_train.json"
+  triplets_individual_val:     "triplets_individual_val.json"
+  val_pairs_individual_json:   "val_pairs_individual.json"
+  training_history_individual: "training_history_individual.json"
+  checkpoint_dir_individual:   "checkpoints_individual"
+
+  # Figure output directories
+  figures_dir:             "figures"
+  figures_individual_dir:  "figures_individual"
+
+  # Optuna outputs
+  optuna_dir: "optuna_results"
+
+  # Embeddings
+  embeddings_npy:    "embeddings.npy"
+  embedding_ids_csv: "embedding_ids.csv"
+
+  # Outlier analysis
+  outliers_csv: "outliers.csv"
+
+# -----------------------------------------------------------------------------
+# Model architecture (shared between pairwise and individual systems)
+# -----------------------------------------------------------------------------
+model:
+  node_feature_dim:            64
+  gnn_hidden_dim:              128
+  gnn_num_layers:              6
+  gnn_heads:                   8
+  gnn_dropout:                 0.0
+  embedding_dim:               256
+  projection_hidden_dim:       512
+  triplet_margin:              0.5
+  lambda_aux:                  0.053671364938297265
+
+  # Pairwise heads
+  use_metabolite_head:         false
+  use_gene_expression_head:    false
+  use_growth_head:             false
+  metabolite_output_dim:       32
+  gene_expression_output_dim:  64
+
+  # Individual strain heads
+  use_delta_head:  true
+  use_label_head:  true
+  lambda_delta:    1.0
+  lambda_label:    1.0
+
+  # label_mode: false = train on continuous deltas (Implementation 1)
+  #             true  = train on categorical labels (Implementation 2)
+  label_mode: false
+
+# -----------------------------------------------------------------------------
+# Training
+# -----------------------------------------------------------------------------
+training:
+  n_epochs:     100
+  batch_size:   16
+  train_split:  0.8
+  lr:           0.0005768635139990112
+  weight_decay: 0.0004922523643135666
+  random_seed:  42
+  log_every:    10
+
+# -----------------------------------------------------------------------------
+# Dataset preparation - pairwise system
+# -----------------------------------------------------------------------------
+prepare_pairwise:
+  min_growth_gap: 0.05
+  dense_mode:     false
+  top_k:          3
+  random_seed:    42
+
+# -----------------------------------------------------------------------------
+# Dataset preparation - individual strain system
+# -----------------------------------------------------------------------------
+prepare_individual:
+  top_percentile:    0.33
+  bottom_percentile: 0.33
+  min_contrast_gap:  0.02
+  dense_mode:        false
+  top_k:             3
+  random_seed:       42
+  train_split:       0.8
+
+  # Label thresholds - upper bound for each label from worst to best
+  # Anything above the highest threshold = very_good
+  label_thresholds:
+    worse than -0.5: -1.0,
+    -0.4:-0.5: -0.5,
+    -0.3:-0.4: -0.4,
+    -0.2:-0.3: -0.3,
+    -0.1:-0.2: -0.2,
+    0:-0.1: -0.1,
+
+# -----------------------------------------------------------------------------
+# Evaluation
+# -----------------------------------------------------------------------------
+evaluation:
+  n_eval_pairs:  50
+  top_k_percent: 0.25
+  random_seed:   99
+  n_outliers:    15
+
+# -----------------------------------------------------------------------------
+# Optuna hyperparameter optimization
+# -----------------------------------------------------------------------------
+optuna:
+  n_trials:         100
+  n_epochs:         30
+  n_jobs:           1
+  random_seed:      42
+  direction:        "minimize"
+  n_startup_trials: 5
+  n_warmup_steps:   10
+
+  search_space:
+    gnn_hidden_dim:        [64, 128, 256, 512]
+    gnn_num_layers_min:    2
+    gnn_num_layers_max:    6
+    gnn_heads:             [2, 4, 8]
+    gnn_dropout_min:       0.0
+    gnn_dropout_max:       0.4
+    gnn_dropout_step:      0.05
+    embedding_dim:         [64, 128, 256]
+    projection_hidden_dim: [128, 256, 512]
+    triplet_margin_min:    0.5
+    triplet_margin_max:    2.0
+    triplet_margin_step:   0.25
+    lambda_aux_min:        0.01
+    lambda_aux_max:        0.5
+    lr_min:                0.0001
+    lr_max:                0.01
+    weight_decay_min:      0.00001
+    weight_decay_max:      0.001

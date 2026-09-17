@@ -1,0 +1,9 @@
+{
+  "run": 5,
+  "pct_data": 20,
+  "n_train": 799,
+  "best_val_loss": 0.6266648476085965,
+  "triplet_accuracy": 0.6971830985915493,
+  "label_accuracy": 0.9079476861167002,
+  "elapsed_min": 31.48
+}
