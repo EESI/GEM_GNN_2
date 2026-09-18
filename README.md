@@ -32,6 +32,17 @@ pip install -r requirements.txt
 
 ---
 
+## Data
+
+All data used in the example work provided is from the SIMBA-GNN work done by Aminian-Dehkordi et al. (2026) at the Mofrad Lab. The article for SIMBA-GNN can be found here: 
+Aminian-Dehkordi, J., Parsa, M., Dickson, A. et al. SIMBA-GNN: mechanistic graph learning for microbiome prediction. npj Syst Biol Appl 12, 8 (2026). https://doi.org/10.1038/s41540-025-00631-w
+
+The data from Aminian-Dehkordi et al. (2026) can be found on their GitHub here: https://github.com/mofradlab/simba
+
+All data credit to Aminian-Dehkordi et al. (2026).
+
+---
+
 ## Project Structure
 
 ```
