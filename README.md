@@ -39,7 +39,6 @@ Aminian-Dehkordi, J., Parsa, M., Dickson, A. et al. SIMBA-GNN: mechanistic graph
 
 The data from Aminian-Dehkordi et al. (2026) can be found on their GitHub here: https://github.com/mofradlab/simba
 
-All data credit to Aminian-Dehkordi et al. (2026).
 
 ---
 
